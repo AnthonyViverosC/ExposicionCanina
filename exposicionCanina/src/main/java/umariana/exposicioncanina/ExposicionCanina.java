@@ -2,16 +2,18 @@
 package umariana.exposicioncanina;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 /**
  *
- * @author AnthonyBrr
+ * @author Anthony 
  */
 public class ExposicionCanina {
      
          ArrayList<Perro> misPerros = new ArrayList<>();
-         Scanner sc = new Scanner (System.in);
+         Scanner lector = new Scanner (System.in);
          public static void main(String[] args) {
  
              ExposicionCanina expo = new ExposicionCanina();
@@ -26,13 +28,13 @@ public void mostrarMenu(){
         System.out.println("1. Agregra perro");
          System.out.println("2.Lista de perros");
          System.out.println("3.Informacion de un perro");
-         System.out.println("4.Localizar perro por nombre");
-          System.out.println("5.Buscar perro ganador mayor puntaje");
-          System.out.println("6.Buscar perro con menos puntaje");
-          System.out.println("7.Buscar perro con mayor edad");
-          System.out.println("8.Cerrar programa");
+         System.out.println("4.Localizar perro ");
+          System.out.println("5. perro ganador mayor puntaje");
+          System.out.println("6. perro con menos puntaje");
+          System.out.println("7. perro con mayor edad");
+          System.out.println("8.Finalizar");
      
-          int opcion = sc.nextInt();
+          int opcion = lector .nextInt();
           
                   switch(opcion ){
                       case 1:
@@ -79,8 +81,8 @@ public void agregarPerro() throws NombreDuplicadoException{
     
     
     System.out.println("Ingrese nombre perro");
-    sc.nextLine();
-    String nombre = sc.nextLine();
+    lector .nextLine();
+    String nombre = lector .nextLine();
     if(!misPerros.isEmpty()){
     for(Perro p : misPerros){
         if(p.getNombre().equalsIgnoreCase(nombre)){
@@ -90,16 +92,16 @@ public void agregarPerro() throws NombreDuplicadoException{
     }
     System.out.println("Ingrese la raza del perro");
    
-    String raza = sc.nextLine();  
+    String raza = lector .nextLine();  
     
     System.out.println("Ingrese la edad del perro ");
-    int edad = sc.nextInt();
+    int edad = lector .nextInt();
     
     System.out.println("Ingrese los puntos del perro");
-    int puntos = sc.nextInt();
+    int puntos = lector .nextInt();
     
     System.out.println("Ingrese la foto del perro");
-    String foto = sc.next();
+    String foto = lector .next();
     System.out.println("======================");
     
      Perro nuevoPerro = new Perro(nombre,raza,edad,puntos,foto);
@@ -172,10 +174,11 @@ public void agregarPerro() throws NombreDuplicadoException{
         System.out.println("===Listar===");
         System.out.println("1. Listar perros por edad");
          System.out.println("2.Listar perros por puntaje");
-         System.out.println("3.Volver al menu principal");
+         System.out.println("3.Lista de perro por razal");
+         System.out.println("4.Volver al menu principal");
           System.out.println("4.Cerrar programa");
      
-          int opcion = sc.nextInt();
+          int opcion = lector .nextInt();
           
                   switch(opcion ){
    
@@ -187,10 +190,13 @@ public void agregarPerro() throws NombreDuplicadoException{
                                  
                             break;
                   case 3 :
-                      mostrarMenu();
+                     mostrarPerrosPorRaza();
                       break;
-
-                      case 4:
+                  case 4:
+                        mostrarMenu();
+                     
+                      break;
+                      case 5:
                        activo = false;
                     System.out.println("programa finalizado");
                     break;
@@ -206,8 +212,8 @@ public void agregarPerro() throws NombreDuplicadoException{
   public void buscarInformacionPerro() {
       
       System.out.println("Ingrese el nombre del perro que deeses ver la informacion ");
-       sc.nextLine();
-      String nombrePerro = sc.nextLine();
+       lector .nextLine();
+      String nombrePerro = lector .nextLine();
     for (Perro p : misPerros) {
         if (p.getNombre().equalsIgnoreCase(nombrePerro)) {
             System.out.println("Informacion del perro:");
@@ -224,19 +230,19 @@ public void agregarPerro() throws NombreDuplicadoException{
     public void localizarPerro() {
     boolean perroEncontrado = false;
     System.out.println("Ingrese el perro que deese buscar ");
-    sc.nextLine();
-    String nombreB = sc.nextLine();
+    lector .nextLine();
+    String nombre = lector.nextLine();
     
     for(Perro p: misPerros) {
-        if(p.getNombre().equals(nombreB)) {
-            
-            System.out.println("Perro encontrado su infomracion");
+        if(p.getNombre().equals(nombre)) {
+              perroEncontrado = true;
+            System.out.println("Perro encontrado ");
             System.out.println("raza: " + p.getRaza());
             System.out.println("nombre: " + p.getNombre());
             System.out.println("edad: " + p.getEdad());
             System.out.println("puntos: " + p.getPuntos());
             System.out.println("foto: " + p.getFoto());
-            perroEncontrado = true;
+          
          
         }
     }
@@ -270,8 +276,9 @@ public void agregarPerro() throws NombreDuplicadoException{
                 perroM = perro;
         }
     }
+        
 
-    System.out.println("El perro con el menor puntaje es:");
+    System.out.println("perro con el menor puntaje es:");
     System.out.println("nombre: " + perroM.getNombre());
     System.out.println("raza: " + perroM.getRaza());
     System.out.println("edad: " + perroM.getEdad());
@@ -280,21 +287,44 @@ public void agregarPerro() throws NombreDuplicadoException{
 }
          
      }
+         @SuppressWarnings("empty-statement")
+       public void mostrarPerrosPorRaza() {
+        
+        if (misPerros.isEmpty()) {
+            System.out.println("No se han ingresado perros al sistema.");
+            return;
+        }
+        
+        
+        Comparator<Perro> comparadorRaza = (Perro p1, Perro p2) -> p1.getRaza().compareTo(p2.getRaza()); 
+        Collections.sort(misPerros, comparadorRaza);
+        for(Perro p: misPerros) {
+            System.out.println("Nombre: "+p.getNombre());
+            System.out.println("Foto: "+p.getFoto());
+            System.out.println("Raza: "+p.getRaza());
+            System.out.println("Edad: "+p.getEdad());
+            System.out.println("Puntos: "+p.getPuntos());
+            System.out.println("----------------------------------");
+     
+}
+       }
+
+
          public void buscarPerroMasViejo(){
          if (!misPerros.isEmpty()) {
-            Perro perroV = misPerros.get(0);
+            Perro p = misPerros.get(0);
                 for (Perro perro : misPerros) {
-                    if (perro.getEdad() > perroV.getEdad()) {
-                        perroV = perro;
+                    if (perro.getEdad() > p.getEdad()) {
+                        p = perro;
         }
     }
 
-    System.out.println("El perro con mayor edad es:");
-    System.out.println("nombre: " + perroV.getNombre());
-    System.out.println("raza: " + perroV.getRaza());
-    System.out.println("edad: " + perroV.getEdad());
-    System.out.println("puntos: " + perroV.getPuntos());
-    System.out.println("foto: " + perroV.getFoto());
+    System.out.println(" perro con mayor edad es:");
+    System.out.println("nombre: " + p.getNombre());
+    System.out.println("raza: " + p.getRaza());
+    System.out.println("edad: " + p.getEdad());
+    System.out.println("puntos: " + p.getPuntos());
+    System.out.println("foto: " + p.getFoto());
 }
          
      }
